@@ -31,13 +31,17 @@ class UW_Freelancer{
         
     }
     
+    public function enqueue_scripts(){
+        wp_enqueue_style('uw-freelancer-widget-styles', plugins_url() . '/uw-freelancer/css/uw-freelancer-widgets.css');
+    }    
+    
     function register_widgets(){
         
         require 'uw-freelancer-profile.php';
         register_widget( 'UW_Freelancer_Profile' );
         
-        require 'uw-freelancer-feedback-r.php';
-        register_widget( 'UW_Freelancer_Feedback_R' );   
+        require 'uw-freelancer-feedback.php';
+        register_widget( 'UW_Freelancer_Feedback' );   
         
         require 'uw-freelancer-affiliate.php';
         register_widget( 'UW_Freelancer_Affiliate' );            
@@ -76,8 +80,9 @@ class UW_Freelancer{
         if(!$feedback){ 
             $uw_freelancer_options = get_option( 'uw_freelancer_options' );
             $count = $uw_freelancer_options['feedback_count'];
+            $type = $uw_freelancer_options['feedback_type'];
             
-            $url = $this->api_url . '/Feedback/Search.json?count=' . $count . '&type=s&user=' . $user_id;
+            $url = $this->api_url . '/Feedback/Search.json?count=' . $count . '&type=' . $type . '&user=' . $user_id;
             $response = wp_remote_get($url); 
         
             if(is_wp_error($response)){

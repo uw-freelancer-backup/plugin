@@ -1,6 +1,4 @@
 function uw_freelancer_affiliate(json) {   
-    console.log(json);
-    console.log(uw_freelancer_obj);
     // let's check if received at least 1 project
     if (json.projects.count>0) {
         
@@ -18,21 +16,27 @@ function uw_freelancer_affiliate(json) {
                 (p.options.trial?' <sup><b style="color:gray">Trial</b></sup>':'')+
                 (p.options.nonpublic?' <sup><b style="color:#694E5A">Nonpublic</b></sup>':'')+
                 (p.options.urgent?' <sup><b style="color:red">Urgent</b></sup>':'');
+            
+        document.write('<div class="row">');            
+        document.write('<div class="uw-freelancer-widget">');
 
         if(uw_freelancer_obj.show_adname == true){
-            document.write('<h3>'+projectTitle + '</h3>');
+            document.write('<h4><a href="'+p.url+'">'+projectTitle + '</a></h4>');
         }     
         
-        if(uw_freelancer_obj.show_addesk == true){
-            document.write('<p>' + p.short_descr + '</p>');
+        if(uw_freelancer_obj.show_addesc == true){
+            document.write( p.short_descr + '<br /><br />');
         } 
         
         if(uw_freelancer_obj.show_startdate == true){
             var start = new Date(p.start_unixtime*1000);
-            document.write('Posted on: ' + start.getFullYear() + '<br />');
+            var formattedstart = start.getFullYear() + '-' + start.getMonth() + '-' + start.getDate()
+            document.write('Posted on: ' + formattedstart + '<br />');
         } 
         if(uw_freelancer_obj.show_enddate == true){
-            document.write('Bidding ends on :' + p.end_unixtime + '<br />');
+            var end = new Date(p.end_unixtime*1000);
+            var formattedend = end.getFullYear() + '-' + end.getMonth() + '-' + end.getDate()
+            document.write('Bidding ends on : ' + formattedend + '<br />');
         }   
         if(uw_freelancer_obj.show_daysleft == true){
             document.write('Days left : ' + p.daysLeft + '<br />');
@@ -42,15 +46,17 @@ function uw_freelancer_affiliate(json) {
             document.write('Total bids : ' + p.bid_stats.count + '<br />');
         }  
         if(uw_freelancer_obj.show_bidavg == true){
-            document.write('Bid average : ' + p.bid_stats.avg + '<br />');
+            document.write('Bid average : ' + p.bid_stats.avg + ' USD<br />');
         }             
                 
             
         if(uw_freelancer_obj.show_budget == true){
-            document.write('<p>Budget: ' + budget + '</p>');
+            document.write('Budget: ' + budget + '<br />');
         }
         
-        document.write('<p><a href="'+p.url+'">Bid on this project</a></p>');
+        document.write('<br /><a class="radius button" href="'+p.url+'">Bid on this project</a>');
+        
+        document.write('</div></div>'); 
         
     });
     

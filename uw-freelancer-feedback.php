@@ -1,19 +1,19 @@
 <?php
 
-class UW_Freelancer_Profile extends WP_Widget{
+class UW_Freelancer_Feedback extends WP_Widget{
     
     public function __construct() {
         parent::__construct(
-                'uw-freelancer-profile',
-                __( 'UW Freelancer Profile', 'uwfreelancer' ),
+                'uw-freelancer-feedback-r',
+                __( 'UW Freelancer Feedback', 'uwfreelancer' ),
                 array(
                         'classname'		=>	'uw-freelancer',
-                        'description'	=>	__( 'Freelancer.com profile information display widget', 'uwfreelancer' )
+                        'description'	=>	__( 'Show a list of recent feedbacks for projects at freelancer.com.', 'uwfreelancer' )
                 )
         );
-          
+        
         global $uw_freelancer;
-        add_action('wp_enqueue_scripts', array($uw_freelancer, 'enqueue_scripts'));
+        add_action('wp_enqueue_scripts', array($uw_freelancer, 'enqueue_scripts'));        
     }
 
     public function widget( $args, $instance ) {
@@ -21,7 +21,7 @@ class UW_Freelancer_Profile extends WP_Widget{
 
         echo $before_widget;        
         
-        include( plugin_dir_path( __FILE__ ) . '/views/profile-front.php' );
+        include( plugin_dir_path( __FILE__ ) . '/views/feedback-front.php' );
 
         echo $after_widget;
     }
@@ -46,7 +46,7 @@ class UW_Freelancer_Profile extends WP_Widget{
                 $defaults
         );
 
-        include( plugin_dir_path(__FILE__) . '/views/profile-back.php' );
+        include( plugin_dir_path(__FILE__) . '/views/feedback-back.php' );
     }
 }
 

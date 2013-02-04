@@ -5,6 +5,8 @@ class UW_Freelancer_Setttings{
     private $uw_freelancer_options;
     
     private $freelancer_hook_suffix;
+    
+    private $api_response;
 
     function __construct() {
         // Initialize Theme options
@@ -41,6 +43,7 @@ class UW_Freelancer_Setttings{
             'show_jobs' => true, 
              
             'feedback_count' => 4,
+            'feedback_type' => 'B', 
             'show_rating' => true, 
             'show_value' => true,
             'show_date' => true,
@@ -51,6 +54,11 @@ class UW_Freelancer_Setttings{
              
             'keyword' => 'wordpress',
             'ad_count' => 4,
+            'owner' => 'upekshawisidaga',
+            'show_onlyfeatured' => true,
+            'order' => 'bid_count',
+            'order_dir' => 'asc',             
+             
             'show_adname' => true,
             'show_addesc' => true,
             'show_startdate' => true,
@@ -62,7 +70,9 @@ class UW_Freelancer_Setttings{
             'show_budget' => true, 
              
             'transient_timeout' => 24, 
-            'clear_transients' => false  
+            'clear_transients' => false,
+             
+            'api_query' => 'http://api.freelancer.com/User/Properties.xml?id=upekshawisidaga' 
              
          );
          return $options;
@@ -89,8 +99,69 @@ class UW_Freelancer_Setttings{
     
     // Add "UW Freelancer Options" link to the "Settings" menu
     function menu_options() {
-         $this->freelancer_hook_suffix = add_menu_page('Freelancer Options', 'Freelancer', 'manage_options', 'uw-freelancer-settings', array($this, 'admin_options_page'));
+        
+        // add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
+        $this->freelancer_hook_suffix = add_menu_page(
+                'Freelancer Dashboard', 
+                'Freelancer', 
+                'manage_options', 
+                'uw-freelancer-settings', 
+                array($this, 'admin_options_page'),
+                plugins_url(). '/uw-freelancer/images/uw-freelancer-icon.png');
+        
+        // add_submenu_page( $parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function = '' )
+        add_submenu_page('uw-freelancer-settings', 'API Console', 'API Console', 'manage_options', 'uw-freelancer-api-console', array($this, 'freelancer_api_console'));
+        
+        global $submenu;
+        if ( isset( $submenu['uw-freelancer-settings'] ) )
+                $submenu['uw-freelancer-settings'][0][0] = 'Dashboard';        
     }  
+    
+    function freelancer_api_console(){
+        ?>
+        <div class="wrap">
+        <?php                         
+            echo '<div id="icon-themes" class="icon32"><br /></div>';
+            echo '<h2>Freelancer.com API Console</h2>'; 
+            
+            settings_errors(); 
+        ?>
+            
+        <form action="options.php" method="post">
+            <?php
+            
+            add_settings_section('freelancer_api_console', 'Query Freelancer.com API', 'freelancer_api_console', 'uw-freelancer-api-console');
+
+            function freelancer_api_console(){
+                echo 'Freelancer.com API Console';
+            }
+
+            add_settings_field('query_string', 'API Query String', 'query_string', 'uw-freelancer-api-console', 'freelancer_api_console');
+
+            function query_string(){
+                $uw_freelancer_options = get_option('uw_freelancer_options');
+                echo '<input style="width:800px; max-width:100%;" type="text" id="uw_freelancer_options[api_query]" name="uw_freelancer_options[api_query]" value="' . $uw_freelancer_options['api_query'] . '"><br />';
+                echo '&nbspEnter the query string for freelancer.com api call';
+            }            
+            
+            settings_fields('uw_freelancer_options');
+            do_settings_sections('uw-freelancer-api-console');                         
+            ?>
+            <input name="uw_freelancer_options[submit-api]" type="submit" class="button-primary" value="<?php esc_attr_e('Query API', 'uw'); ?>" />  
+        </form>  
+        <form>    
+        <h3>API Query Response</h3>    
+
+    <?php
+    $api_query = get_transient('api_query');
+    echo '<textarea style="border:none; width:100%; height:600px;>';
+    echo '<pre>';
+    var_dump($api_query);
+    echo '</pre>';
+    echo '</textarea>';
+    echo '</form>';    
+    echo '</div>';
+    }
     
     function admin_options_page() { 
         ?>
@@ -160,6 +231,8 @@ class UW_Freelancer_Setttings{
     
     function uw_freelancer_options_validate($input){
         
+    global $uw_freelancer;
+    
     $uw_freelancer_options = get_option( 'uw_freelancer_options' );
     $valid_input = $uw_freelancer_options;        
 
@@ -171,7 +244,9 @@ class UW_Freelancer_Setttings{
     $submit_affiliate = ( ! empty($input['submit-affiliate']) ? true : false );
     $reset_affiliate = ( ! empty($input['reset-affiliate']) ? true : false );
     $submit_settings = ( ! empty($input['submit-settings']) ? true : false );
-    $reset_settings = ( ! empty($input['reset-settings']) ? true : false );    
+    $reset_settings = ( ! empty($input['reset-settings']) ? true : false );  
+    
+    $api_query = ( ! empty($input['submit-api']) ? true : false );  
      
     if ( $submit_profile ) { // if General Settings Submit
 
@@ -186,6 +261,14 @@ class UW_Freelancer_Setttings{
         $valid_input['show_rating'] = ( ! empty($input['show_rating']) ? true : false );
         $valid_input['show_count'] = ( ! empty($input['show_count']) ? true : false );
         $valid_input['show_jobs'] = ( ! empty($input['show_jobs']) ? true : false );
+        
+        global $uw_freelancer;
+
+        $user_transient = $uw_freelancer->freelancer_transient(
+                'delete',
+                'user',
+                $uw_freelancer_options['user_id']
+        );         
         
         add_settings_error('uw-freelancer', 'updated', 'UW Freelancer Profile Settings Saved', 'updated');
         
@@ -203,13 +286,22 @@ class UW_Freelancer_Setttings{
         $valid_input['show_regdate'] = $default_options['show_regdate'];
         $valid_input['show_rating'] = $default_options['show_rating'];
         $valid_input['show_count'] = $default_options['show_count'];
-        $valid_input['show_jobs'] = $default_options['show_jobs'];     
+        $valid_input['show_jobs'] = $default_options['show_jobs'];  
+        
+        global $uw_freelancer;
+
+        $user_transient = $uw_freelancer->freelancer_transient(
+                'delete',
+                'user',
+                $uw_freelancer_options['user_id']
+        );         
         
         add_settings_error('uw-freelancer', 'updated', 'UW Freelancer Profile Settings changed to Defaults', 'updated');
         
     } else if($submit_feedback) {
         
         $valid_input['feedback_count'] = ( ! empty($input['feedback_count']) ? intval(sanitize_text_field($input['feedback_count'])) : 4 );
+        $valid_input['feedback_type'] = ( ! empty($input['feedback_type']) && ($input['feedback_type'] == 'S') ? 'S' : 'B' ); 
         $valid_input['show_rating'] = ( ! empty($input['show_rating']) ? true : false ); 
         $valid_input['show_value'] = ( ! empty($input['show_value']) ? true : false );
         $valid_input['show_date'] = ( ! empty($input['show_date']) ? true : false );
@@ -218,6 +310,12 @@ class UW_Freelancer_Setttings{
         $valid_input['show_project'] = ( ! empty($input['show_project']) ? true : false );        
         $valid_input['show_project_link'] = ( ! empty($input['show_project_link']) ? true : false );        
         
+        $feedback_transient = $uw_freelancer->freelancer_transient(
+                'delete',
+                'feedback',
+                $uw_freelancer_options['user_id']
+        );           
+        
         add_settings_error('uw-freelancer', 'updated', 'UW Freelancer Feedback Settings Saved', 'updated');
         
     } else if($reset_feedback){
@@ -225,6 +323,7 @@ class UW_Freelancer_Setttings{
         $default_options = $this->get_default_options();
         
         $valid_input['feedback_count'] = $default_options['feedback_count'];
+        $valid_input['feedback_type'] = $default_options['feedback_type'];
         $valid_input['show_rating'] = $default_options['show_rating'];
         $valid_input['show_value'] = $default_options['show_value'];
         $valid_input['show_date'] = $default_options['show_date'];
@@ -233,12 +332,29 @@ class UW_Freelancer_Setttings{
         $valid_input['show_project'] = $default_options['show_project'];
         $valid_input['show_project_link'] = $default_options['show_project_link'];
         
+        $feedback_transient = $uw_freelancer->freelancer_transient(
+                'delete',
+                'feedback',
+                $uw_freelancer_options['user_id']
+        );            
+        
         add_settings_error('uw-freelancer', 'updated', 'UW Freelancer Feedback Settings changed to Defaults', 'updated');
         
     } else if($submit_affiliate) {
         
         $valid_input['keyword'] = ( ! empty($input['keyword']) ? sanitize_text_field($input['keyword']) : 'wordpress' );
         $valid_input['ad_count'] = ( ! empty($input['ad_count']) ? intval(sanitize_text_field($input['ad_count'])) : 4 );
+        
+        $valid_input['owner'] = ( ! empty($input['owner']) ? sanitize_text_field($input['owner']) : '' );
+        $valid_input['only_featured'] = ( ! empty($input['only_featured']) ? true : false );
+        
+        $order = ( ! empty($input['order']) ? sanitize_text_field($input['order']) : '' );
+        $valid_order_types = array('id', 'submitdate', 'state', 'bid_count', 'bid_avg', 'bid_enddate', 'buyer', 'budget', 'relevance', 'rand');
+        if (in_array($order, $valid_order_types)){
+            $valid_input['order'] = $order;
+        }
+        
+        $valid_input['order_dir'] = ( ! empty($input['order_dir']) && ($input['order_dir'] == 'asc') ? 'asc' : 'desc' ); 
         
         $valid_input['show_adname'] = ( ! empty($input['show_adname']) ? true : false );
         $valid_input['show_addesc'] = ( ! empty($input['show_addesc']) ? true : false );
@@ -257,6 +373,11 @@ class UW_Freelancer_Setttings{
         
         $valid_input['keyword'] = $default_options['keyword'];
         $valid_input['ad_count'] = $default_options['ad_count'];
+        
+        $valid_input['owner'] = $default_options['owner'];
+        $valid_input['only_featured'] = $default_options['only_featured'];
+        $valid_input['order'] = $default_options['order'];
+        $valid_input['order_dir'] = $default_options['order_dir'];
         
         $valid_input['show_adname'] = $default_options['show_adname'];
         $valid_input['show_addesc'] = $default_options['show_addesc'];
@@ -303,9 +424,24 @@ class UW_Freelancer_Setttings{
         }
         
         add_settings_error('uw-freelancer', 'updated', 'UW Freelancer Transients Settings Saved', 'updated');
+    } else if($reset_settings){ 
         
-    } else if($reset_settings){
+        $default_options = $this->get_default_options();
         
+        $valid_input['api_query'] = $default_options['api_query'];   
+        
+    } else if($api_query){
+        $valid_input['api_query'] = ( ! empty($input['api_query']) ? sanitize_url($input['api_query']) : $valid_input['keyword'] );
+        
+        $api_query_response = wp_remote_get($valid_input['api_query']);
+        
+        $api_response = 'UW Freelancer API Queried Successfully<br />';
+        
+        set_transient('api_query', $api_query_response, 60*60);
+        
+        add_settings_error('uw-freelancer', 'updated', $api_response, 'updated'); 
+        add_settings_error('uw-freelancer', 'updated', 'Query : ' . $input['api_query'], 'updated');
+               
     }     
         
     $this->uw_freelancer_options = $valid_input;
@@ -329,15 +465,34 @@ class UW_Freelancer_Setttings{
     <?php        
     }
     
-    function freelancer_admin_scripts(){        
+    function freelancer_admin_scripts(){      
+        
+        /**
+         * Page: 'uw-freelancer-page' menu page
+         * Page: 'uw-freelancer-api-console' menu page
+         * 
+         * Enqueue uw-freelancer-admin styles.
+         * Page icon and a background image.
+         */
         if(isset( $_GET['page'] ) 
-           && 'uw-freelancer-settings' == $_GET['page']
-           && isset( $_GET['tab'] ) 
-           && 'settings' == $_GET['tab'])
+           && ( 'uw-freelancer-settings' == $_GET['page']
+                 || 'uw-freelancer-api-console' == $_GET['page'] ))
         {
-        wp_enqueue_script('jquery-ui-tabs');
-        wp_enqueue_script('freelancer-settings', plugins_url() . '/uw-freelancer/js/uw-freelancer-settings.js', 'jquery-ui-tabs', '1.0', true);
-        wp_enqueue_style('jquery-style', plugins_url() . '/uw-freelancer/css/smoothness/jquery-ui-1.10.0.custom.min.css');
+            wp_enqueue_style('uw-freelancer-admin', plugins_url() . '/uw-freelancer/css/uw-freelancer-admin.css');
+            
+            /**
+             * Page: 'uw-freelancer-page' menu page
+             * Tab: Settings Tab
+             * 
+             * Enqueue jQuery-ui Tabs scripts.
+             */
+            if(isset( $_GET['tab'] ) 
+               && 'settings' == $_GET['tab'])
+            {
+            wp_enqueue_script('jquery-ui-tabs');
+            wp_enqueue_script('freelancer-settings', plugins_url() . '/uw-freelancer/js/uw-freelancer-settings.js', 'jquery-ui-tabs', '1.0', true);
+            wp_enqueue_style('jquery-style', plugins_url() . '/uw-freelancer/css/smoothness/jquery-ui-1.10.0.custom.css');
+            }
         }
     }
    

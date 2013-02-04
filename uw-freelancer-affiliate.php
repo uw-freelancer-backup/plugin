@@ -5,13 +5,15 @@ class UW_Freelancer_Affiliate extends WP_Widget{
     public function __construct() {
         parent::__construct(
                 'uw-freelancer-affiliate',
-                __( 'UW Freelancer Affiliate Projects', 'uwfreelancer' ),
+                __( 'UW Freelancer Affiliate Project Listing', 'uwfreelancer' ),
                 array(
                         'classname'		=>	'uw-freelancer',
-                        'description'	=>	__( 'Direct visitors to freelancer.com and earn commision.', 'uwfreelancer' )
+                        'description'	=>	__( 'List latest projects from freelancer.com - Earn commisions for signups.', 'uwfreelancer' )
                 )
         );
         
+        global $uw_freelancer;
+        add_action('wp_enqueue_scripts', array($uw_freelancer, 'enqueue_scripts'));        
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
     }
 
