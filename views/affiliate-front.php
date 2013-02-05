@@ -1,4 +1,8 @@
 <?php
+if( !defined( 'ABSPATH' ) ){
+    header('HTTP/1.0 403 Forbidden');
+    die('No Direct Access Allowed!');
+}
 
 $uw_freelancer_options = get_option('uw_freelancer_options');
 $count = $uw_freelancer_options['ad_count'];
@@ -20,5 +24,5 @@ $script_string =  '<script src="http://api.freelancer.com/Project/Search.json?';
         if(!empty($order)) $script_string .= '&order=' . $order;
         if(!empty($order_dir)) $script_string .= '&order_dir=' . $order_dir;        
 $script_string .= '&callback=uw_freelancer_affiliate" language="javascript"></script>';
-echo $script_string;
+echo apply_filters('uwf-affiliate-front', $script_string, $aff, $uw_freelancer_options, $instance);
 ?>

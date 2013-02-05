@@ -1,4 +1,9 @@
 <?php
+if( !defined( 'ABSPATH' ) ){
+    header('HTTP/1.0 403 Forbidden');
+    die('No Direct Access Allowed!');
+}
+
 global $uw_freelancer;
 
 $uw_freelancer_options = get_option('uw_freelancer_options');
@@ -17,43 +22,42 @@ foreach($feedback->feedbacks->items as $project){
     $value = $project->bid->amount;
     $date = $project->active_unixtime;
 
-?>
-<div class="row">
-    <div class="uw-freelancer-widget twelve columns">
-    <?php    
-    
+$output = '<div class="row">';
+    $output .= '<div class="uw-freelancer-widget twelve columns">';
+
     if($uw_freelancer_options['show_project'] == true && isset($project_name)){
         if($uw_freelancer_options['show_project_link'] && isset($project_link)){
-            echo '<h5><a href="' . $project_link . '">' . $project_name . '</a></h5>';
+            $output .= '<h5><a href="' . $project_link . '">' . $project_name . '</a></h5>';
         } else {
-            echo '<h5>' . $project_name . '</h5>';
+            $output .= '<h5>' . $project_name . '</h5>';
         }    
     } 
     
-    echo $feedback;
+    $output .= $feedback;
     
     if($uw_freelancer_options['show_provider'] == true && isset($feedback)){
         if($uw_freelancer_options['show_provider_link'] && isset($from_user_link)){
-            echo ' - <a href="' . $from_user_link . '">' . $from_user . '</a><br /><br />';
+            $output .= ' - <a href="' . $from_user_link . '">' . $from_user . '</a><br /><br />';
         } else {
-            echo ' - ' . $from_user . '<br /><br />';
+            $output .= ' - ' . $from_user . '<br /><br />';
         }        
     }  
     
     if($uw_freelancer_options['show_rating'] == true && isset($rating)){
-        echo 'Rating : ' . $rating . ' (/10)<br /><br />';
+        $output .= 'Rating : ' . $rating . ' (/10)<br /><br />';
     }
     
     if($uw_freelancer_options['show_value'] == true && isset($value)){
-        echo 'Project Value : ' . $value . '<br /><br />';
+        $output .= 'Project Value : ' . $value . '<br /><br />';
     }
     
     if($uw_freelancer_options['show_date'] == true && isset($date)){
-        echo 'Date : ' . date("j, n, Y", $date) . '<br /><br />';
+        $output .= 'Date : ' . date("j, n, Y", $date) . '<br /><br />';
     }        
+ 
+    $output .= '</div>';
+$output .= '</div>';
+
+echo apply_filters('uwf-feedback-front', $output, $feedback, $uw_freelancer_options, $instance);
     
-    ?>    
-    </div>
-</div>
-<?php
 }

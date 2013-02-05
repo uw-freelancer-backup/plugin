@@ -1,4 +1,9 @@
 <?php
+if( !defined( 'ABSPATH' ) ){
+    header('HTTP/1.0 403 Forbidden');
+    die('No Direct Access Allowed!');
+}
+
 global $uw_freelancer;
 
 $uw_freelancer_options = get_option('uw_freelancer_options');
@@ -7,55 +12,50 @@ $user = $uw_freelancer->get_user($uw_freelancer_options['user_id'])->profile;
 
 $jobs = implode(", ", $user->jobs);
 
-
-
 $hireme_link = 'https://www.freelancer.com/users/' . $user->id . '.html?ext=1&action=hireme';
-$hireme_image = plugins_url() . '/uw-freelancer/images/hireme-freelancer.png';
+$hireme_image = plugins_url() . '/uw-freelancer/images/uw-freelancer-hireme.png';
 
-?>
-<div class="uw-freelancer-widget row">
-        
-<?php
+$output = '<div class="uw-freelancer-widget row">';
 
 if($uw_freelancer_options['show_userphoto'] == true && isset($user->profile_logo_url)){
-    echo '<img src="' . $user->profile_logo_url . '" /><br />';
+    $output .= '<img src="' . $user->profile_logo_url . '" /><br />';
 }
 
 if($uw_freelancer_options['show_username'] == true && isset($user->username)){
-    echo 'Username : ' . $user->username . '<br />';
+    $output .= 'Username : ' . $user->username . '<br />';
 }
 
 if($uw_freelancer_options['show_company'] == true && isset($user->company)){
-    echo 'Company : ' . $user->company . '<br />';
+    $output .= 'Company : ' . $user->company . '<br />';
 }
 
 if($uw_freelancer_options['show_city'] == true && isset($user->address->city)){
-    echo 'City : ' . $user->address->city . '<br />';
+    $output .= 'City : ' . $user->address->city . '<br />';
 }
 
 if($uw_freelancer_options['show_country'] == true && isset($user->address->country)){
-    echo 'Country : ' . $user->address->country . '<br />';
+    $output .= 'Country : ' . $user->address->country . '<br />';
 }
 
 if($uw_freelancer_options['show_regdate'] == true && isset($user->reg_unixtime)){
-    echo 'Registered date : ' . date("j, n, Y", $user->reg_unixtime) . '<br />';
+    $output .= 'Registered date : ' . date("j, n, Y", $user->reg_unixtime) . '<br />';
 }
 
 if($uw_freelancer_options['show_rating'] == true && isset($user->provider_rating->avg)){
-    echo 'Average Rating : ' . $user->provider_rating->avg . ' (/10)<br />';
+    $output .= 'Average Rating : ' . $user->provider_rating->avg . ' (/10)<br />';
 }
 
 if($uw_freelancer_options['show_count'] == true && isset($user->provider_rating->count)){
-    echo 'No of projects completed : ' . $user->provider_rating->count . '<br />';
+    $output .= 'No of projects completed : ' . $user->provider_rating->count . '<br />';
 }
 
 if($uw_freelancer_options['show_jobs'] == true && isset($user->jobs)){
-    echo 'Jobs : ' . $jobs . '<br />';
+    $output .= 'Jobs : ' . $jobs . '<br />';
 }
 
-
-?>
-<div class="row" style="text-align: center; margin-top: 5px;">
-    <a href="<?php echo $hireme_link; ?>"><img src="<?php echo $hireme_image ?>" /></a>
-</div>
-</div>
+    $output .= ' <div class="row" style="text-align: center; margin-top: 5px;">';
+    $output .= ' <a href="'. $hireme_link .'"><img src="' . $hireme_image . '" /></a>';
+    $output .= ' </div>';
+    $output .= '</div>';
+    
+echo apply_filters('uwf-profile-front', $output, $user, $uw_freelancer_options, $instance);    
