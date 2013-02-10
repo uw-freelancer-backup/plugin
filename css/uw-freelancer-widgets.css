@@ -1,12 +1,1 @@
-/* 
-    Document   : uw-freelancer-widgets
-    Created on : Feb 4, 2013, 12:20:34 PM
-    Author     : upeksha
-    Description:
-        Purpose of the stylesheet follows.
-*/
-
-root { 
-    display: block;
-}
-
+.uwf-widget .uwf-profile-photo{text-align:center;margin:5px 0}.uwf-widget .uwf-profile-details{overflow:auto}.uwf-widget .uwf-item{float:left;clear:both;line-height:1.6}.uwf-widget .uwf-item .uwf-item-header{font-weight:bold}.uwf-widget .uwf-hire-me-link{text-align:center;padding:10px 0 5px 0}.uwf-widget .uwf-feedback{line-height:1.6}.uwf-widget a{color:#8b9dc3}.uwf-widget a:hover{color:#3b5998}

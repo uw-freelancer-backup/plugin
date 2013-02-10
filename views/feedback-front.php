@@ -22,8 +22,8 @@ foreach($feedback->feedbacks->items as $project){
     $value = $project->bid->amount;
     $date = $project->active_unixtime;
 
-$output = '<div class="row">';
-    $output .= '<div class="uw-freelancer-widget twelve columns">';
+$output = '<div>';
+    $output .= '<div class="uwf-widget">';
 
     if($uw_freelancer_options['show_project'] == true && isset($project_name)){
         if($uw_freelancer_options['show_project_link'] && isset($project_link)){
@@ -33,27 +33,39 @@ $output = '<div class="row">';
         }    
     } 
     
+    $output .= '<div class="uwf-feedback">';
     $output .= $feedback;
     
-    if($uw_freelancer_options['show_provider'] == true && isset($feedback)){
+    if($uw_freelancer_options['show_provider'] == true && isset($feedback)){        
         if($uw_freelancer_options['show_provider_link'] && isset($from_user_link)){
-            $output .= ' - <a href="' . $from_user_link . '">' . $from_user . '</a><br /><br />';
+            $output .= ' - <a href="' . $from_user_link . '">' . $from_user . '</a>';
         } else {
-            $output .= ' - ' . $from_user . '<br /><br />';
-        }        
+            $output .= ' - ' . $from_user;
+        } 
+        $output .= '</div>';
     }  
     
+    $output .= ' <div class="uwf-profile-details">';
+    
     if($uw_freelancer_options['show_rating'] == true && isset($rating)){
-        $output .= 'Rating : ' . $rating . ' (/10)<br /><br />';
+        $output .= '<span class="uwf-item">';
+        $output .= '<span class="uwf-item-header">Rating : </span>' . $rating . ' (/10)';
+        $output .= '</span>';
     }
     
     if($uw_freelancer_options['show_value'] == true && isset($value)){
-        $output .= 'Project Value : ' . $value . '<br /><br />';
+        $output .= '<span class="uwf-item">';
+        $output .= '<span class="uwf-item-header">Project Value : </span>' . $value ;
+        $output .= '</span>';
     }
     
     if($uw_freelancer_options['show_date'] == true && isset($date)){
-        $output .= 'Date : ' . date("j, n, Y", $date) . '<br /><br />';
-    }        
+        $output .= '<span class="uwf-item">';
+        $output .= '<span class="uwf-item-header">Date : </span>' . date("j, n, Y", $date) ;
+        $output .= '</span>';
+    }       
+    
+    $output .= '</div>';
  
     $output .= '</div>';
 $output .= '</div>';

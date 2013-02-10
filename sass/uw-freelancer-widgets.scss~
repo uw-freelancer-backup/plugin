@@ -1,0 +1,27 @@
+.uwf-widget{
+   .uwf-profile-photo{
+      text-align:center;
+      margin: 5px 0;
+   }
+   .uwf-profile-details{
+      overflow:auto; 
+   }
+   .uwf-item{
+      float:left;	   
+      clear:both;
+      line-height:1.6;
+      .uwf-item-header{
+         font-weight:bold;
+      }
+   }
+   .uwf-hire-me-link{
+      text-align:center;
+      padding: 10px 0 5px 0;
+   }
+   .uwf-feedback{
+      line-height:1.6;
+   }
+   a{
+      color:#8b9dc3;
+   }
+}
