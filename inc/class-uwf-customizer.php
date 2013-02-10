@@ -1,8 +1,32 @@
 <?php
 class UW_Freelancer_Customizer{
+    private $uw_freelancer_styles;
+   
     function __construct() {
         add_action( 'customize_register', array($this, 'customize_register') );
+        add_action('after_setup_theme', array($this, 'options_init') );  
     }
+    
+    function options_init() {
+         $this->uw_freelancer_styles = get_option( 'uw_freelancer_styles' );
+         if ( false === $this->uw_freelancer_styles ) {
+              $this->uw_freelancer_styles = $this->get_default_options();
+         }
+         update_option( 'uw_freelancer_styles', $this->uw_freelancer_styles );
+    }   
+    
+    function get_default_options() {
+         $options = array(
+            'border_width' => '1px',
+            'border_color' => '#e6e6e6',            
+            'border_radius' => '1px',
+            'padding' => '20px',
+            'margin' => '10px 0',
+            'background_color' => '#f2f2f2'
+             
+         );
+         return $options;
+    }     
     
     function customize_register($wp_customize){
     $wp_customize->add_section( 'uw_freelancer', array(
@@ -76,7 +100,7 @@ class UW_Freelancer_Customizer{
     // Widget Margin -----------------------------------------------------------
     
     $wp_customize->add_setting( 'uw_freelancer_styles[margin]', array(
-        'default'        => '0',
+        'default'        => '10px 0',
         'type'           => 'option',
         'transport'      => 'postMessage',
         'capability'     => 'manage_options',

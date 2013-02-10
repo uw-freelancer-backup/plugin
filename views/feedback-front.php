@@ -27,20 +27,20 @@ $output = '<div>';
 
     if($uw_freelancer_options['show_project'] == true && isset($project_name)){
         if($uw_freelancer_options['show_project_link'] && isset($project_link)){
-            $output .= '<h5><a href="' . $project_link . '">' . $project_name . '</a></h5>';
+            $output .= '<h4><a href="' . esc_url($project_link) . '">' . esc_html($project_name) . '</a></h4>';
         } else {
-            $output .= '<h5>' . $project_name . '</h5>';
+            $output .= '<h4>' . esc_html($project_name) . '</h4>';
         }    
     } 
     
     $output .= '<div class="uwf-feedback">';
-    $output .= $feedback;
+    $output .= esc_html($feedback);
     
     if($uw_freelancer_options['show_provider'] == true && isset($feedback)){        
         if($uw_freelancer_options['show_provider_link'] && isset($from_user_link)){
-            $output .= ' - <a href="' . $from_user_link . '">' . $from_user . '</a>';
+            $output .= ' - <a href="' . esc_url($from_user_link) . '">' . esc_html($from_user) . '</a>';
         } else {
-            $output .= ' - ' . $from_user;
+            $output .= ' - ' . esc_html($from_user);
         } 
         $output .= '</div>';
     }  
@@ -49,19 +49,19 @@ $output = '<div>';
     
     if($uw_freelancer_options['show_rating'] == true && isset($rating)){
         $output .= '<span class="uwf-item">';
-        $output .= '<span class="uwf-item-header">Rating : </span>' . $rating . ' (/10)';
+        $output .= '<span class="uwf-item-header">' . __('Rating', 'uwf') . ' : </span>' . absint($rating) . ' (/10)';
         $output .= '</span>';
     }
     
     if($uw_freelancer_options['show_value'] == true && isset($value)){
         $output .= '<span class="uwf-item">';
-        $output .= '<span class="uwf-item-header">Project Value : </span>' . $value ;
+        $output .= '<span class="uwf-item-header">' . __('Project Value', 'uwf') . ' : </span>' . absint($value) . ' USD';
         $output .= '</span>';
     }
     
     if($uw_freelancer_options['show_date'] == true && isset($date)){
         $output .= '<span class="uwf-item">';
-        $output .= '<span class="uwf-item-header">Date : </span>' . date("j, n, Y", $date) ;
+        $output .= '<span class="uwf-item-header">' . __('Date', 'uwf') . ' : </span>' . date("j, n, Y", absint($date)) ;
         $output .= '</span>';
     }       
     

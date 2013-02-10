@@ -8,7 +8,7 @@ class UW_Freelancer_Setttings{
         add_action('admin_menu', array($this, 'menu_options'));        
         add_action('admin_init', array($this, 'register_settings'));        
         add_action('wp_head', array($this, 'print_freelancer_styles'));        
-        add_action('admin_print_scripts', array($this, 'freelancer_admin_scripts'));       
+        add_action('admin_print_scripts', array($this, 'freelancer_admin_scripts'));
     }
     
     function register_settings(){
@@ -17,7 +17,7 @@ class UW_Freelancer_Setttings{
 
     function get_default_options() {
          $options = array(
-            'show_freelancer_logo' => true,
+            'show_freelancer_logo' => false,
             'user_id' => 'upekshawisidaga',            
             'show_userphoto' => true,
             'show_username' => true,
@@ -41,7 +41,7 @@ class UW_Freelancer_Setttings{
              
             'keyword' => 'wordpress',
             'ad_count' => 4,
-            'owner' => 'upekshawisidaga',
+            'owner' => '',
             'show_onlyfeatured' => true,
             'order' => 'bid_count',
             'order_dir' => 'asc',             
@@ -91,7 +91,7 @@ class UW_Freelancer_Setttings{
                 'manage_options', 
                 'uw-freelancer-settings', 
                 array($this, 'admin_options_page'),
-                plugins_url(). '/uw-freelancer/images/uw-freelancer-icon.png');
+                UWF_URL .'images/uw-freelancer-icon.png');
                 
         add_submenu_page(
                 'uw-freelancer-settings', 
@@ -334,7 +334,7 @@ class UW_Freelancer_Setttings{
         $valid_input['ad_count'] = ( ! empty($input['ad_count']) ? intval(sanitize_text_field($input['ad_count'])) : 4 );
         
         $valid_input['owner'] = ( ! empty($input['owner']) ? sanitize_text_field($input['owner']) : '' );
-        $valid_input['only_featured'] = ( ! empty($input['only_featured']) ? true : false );
+        $valid_input['show_onlyfeatured'] = ( ! empty($input['show_onlyfeatured']) ? true : false );
         
         $order = ( ! empty($input['order']) ? sanitize_text_field($input['order']) : '' );
         $valid_order_types = array('id', 'submitdate', 'state', 'bid_count', 'bid_avg', 'bid_enddate', 'buyer', 'budget', 'relevance', 'rand');
@@ -363,7 +363,7 @@ class UW_Freelancer_Setttings{
         $valid_input['ad_count'] = $default_options['ad_count'];
         
         $valid_input['owner'] = $default_options['owner'];
-        $valid_input['only_featured'] = $default_options['only_featured'];
+        $valid_input['show_onlyfeatured'] = $default_options['show_onlyfeatured'];
         $valid_input['order'] = $default_options['order'];
         $valid_input['order_dir'] = $default_options['order_dir'];
         
@@ -466,7 +466,7 @@ class UW_Freelancer_Setttings{
            && ( 'uw-freelancer-settings' == $_GET['page']
                  || 'uw-freelancer-api-console' == $_GET['page'] ))
         {
-            wp_enqueue_style('uw-freelancer-admin', plugins_url() . '/uw-freelancer/css/uw-freelancer-admin.css');
+            wp_enqueue_style('uw-freelancer-admin', UWF_URL . 'css/uw-freelancer-admin.css');
             
             /**
              * Page: 'uw-freelancer-page' menu page
@@ -478,8 +478,8 @@ class UW_Freelancer_Setttings{
                && 'settings' == $_GET['tab'])
             {
             wp_enqueue_script('jquery-ui-tabs');
-            wp_enqueue_script('freelancer-settings', plugins_url() . '/uw-freelancer/js/uw-freelancer-settings.js', 'jquery-ui-tabs', '1.0', true);
-            wp_enqueue_style('jquery-style', plugins_url() . '/uw-freelancer/css/smoothness/jquery-ui-1.10.0.custom.css');
+            wp_enqueue_script('freelancer-settings', UWF_URL . 'js/uw-freelancer-settings.js', 'jquery-ui-tabs', '1.0', true);
+            wp_enqueue_style('jquery-style', UWF_URL . 'css/smoothness/jquery-ui-1.10.0.custom.css');
             }
         }
     }   

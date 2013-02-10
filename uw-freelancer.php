@@ -3,7 +3,7 @@
 Plugin Name: UW Freelancer
 Plugin URI: http://bapml.com/wordpress-freelancer-plugin
 Description: Display freelancer.com user information, including feedback, using widgets. ( + freelancer.com project listing widget )
-Version: 1.0
+Version: 0.1
 Author: Upeksha Wisidagama
 Author URI: http://bapml.com/wordpress-freelancer-plugin
 License: GPL2 or later.
@@ -26,15 +26,19 @@ License: GPL2 or later.
     MA  02110-1301  USA
 */
 
+if ( !defined('UWF_URL') )
+	define( 'UWF_URL', plugin_dir_url( __FILE__ ) );
+if ( !defined('UWF_PATH') )
+	define( 'UWF_PATH', plugin_dir_path( __FILE__ ) );
+
 if ( ! class_exists( 'UW_Freelancer' ) ){
     
 class UW_Freelancer{
     
-    private $api_url = 'http://api.freelancer.com';
-    private $prefix = 'uw_freelancer';
-    
+    private $api_url = 'http://api.freelancer.com';    
     private $settings;
     private $customizer;
+    private $prefix = 'uw_freelancer';
     
     function __construct() {
         
@@ -50,11 +54,12 @@ class UW_Freelancer{
         
         add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 
                 array($this, 'plugin_action_links') );
+        
     }
-    
-    public function enqueue_scripts(){
+
+    function enqueue_scripts(){
         wp_enqueue_style('uw-freelancer-widget-styles', 
-                plugins_url() . '/uw-freelancer/css/uw-freelancer-widgets.css');
+                plugin_dir_url(__FILE__) . 'css/uw-freelancer-widgets.css');
     }    
     
     function register_widgets(){
@@ -143,13 +148,13 @@ class UW_Freelancer{
     function plugin_action_links($links){
         $dashboard = admin_url() . 'admin.php?page=uw-freelancer-settings';
         $apiconsole = admin_url() . 'admin.php?page=uw-freelancer-api-console';
-	return array_merge(
-		array(
+    return array_merge(
+       array(
                     'settings' => '<a href="' . $dashboard . '">' . __('Settings', 'uwf') . '</a>',
                     'apiconsole' => '<a href="' . $apiconsole . '">' . __('Console', 'uwf') . '</a>'
                 ),
-		$links
-	);
+       $links
+    );
     }
 }
 

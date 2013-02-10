@@ -23,7 +23,7 @@ class UW_Freelancer_Affiliate extends WP_Widget{
     }
     
     public function enqueue_scripts(){        
-        wp_enqueue_script('uw-freelancer-affiliate', plugins_url() . '/uw-freelancer/js/uw-freelancer-affiliate.js', array('jquery'), '1.0', false );
+        wp_enqueue_script('uw-freelancer-affiliate', UWF_URL . 'js/uw-freelancer-affiliate.js', array('jquery'), '1.0', false );
         wp_localize_script('uw-freelancer-affiliate', 'uw_freelancer_obj', $this->localize_uwf());
     }
     

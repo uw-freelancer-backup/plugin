@@ -42,8 +42,8 @@ add_settings_field('only_featured', __('Only Featured Projects', 'uwf'), 'only_f
 
 function only_featured(){
     $uw_freelancer_options = get_option('uw_freelancer_options');
-    $checked = $uw_freelancer_options['only_featured'];
-    echo '<input type="checkbox" id="uw_freelancer_options[only_featured]" name="uw_freelancer_options[only_featured]" value="1"'; checked($checked); echo ' />';
+    $checked = $uw_freelancer_options['show_onlyfeatured'];
+    echo '<input type="checkbox" id="uw_freelancer_options[show_onlyfeatured]" name="uw_freelancer_options[show_onlyfeatured]" value="1"'; checked($checked); echo ' />';
     echo __(' List only featured projects', 'uwf');
 }
 
