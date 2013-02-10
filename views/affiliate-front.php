@@ -13,8 +13,6 @@ $only_featured = $uw_freelancer_options['show_onlyfeatured'];
 $order = $uw_freelancer_options['order'];
 $order_dir = $uw_freelancer_options['order_dir'];
 
-$aff = 'sachiran';
-
 $script_string =  '<script src="http://api.freelancer.com/Project/Search.json?';
         if(!empty($count)) $script_string .= '&count=' . absint($count);
         if(!empty($keyword)) $script_string .= '&keyword=' . esc_html($keyword) ;
