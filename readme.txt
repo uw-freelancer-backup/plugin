@@ -8,7 +8,7 @@ Requires at least: 3.1
 Tested up to: 3.5
 Stable tag: 0.1
 
-Show off your freelancer.com profile and feedback on your WordPress site. Integrate freelancer.com affiliate program using Widgets.
+Display your freelancer.com profile details and project feedback on your WordPress site using widgets. Display an affiliate project listing widget.
 
 == Description ==
 
@@ -104,3 +104,7 @@ Let us know which language you need. We will probably be able to translate this 
 * Initial release.
 
 == Upgrade Notice ==
+
+= 0.1 =
+
+* Initial release.
