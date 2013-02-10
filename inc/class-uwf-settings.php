@@ -27,10 +27,10 @@ class UW_Freelancer_Setttings{
             'show_regdate' => true,
             'show_rating' => true,
             'show_count' => true,
-            'show_jobs' => true, 
+            'show_jobs' => false, 
              
             'feedback_count' => 4,
-            'feedback_type' => 'B', 
+            'feedback_type' => 'S', 
             'show_rating' => true, 
             'show_value' => true,
             'show_date' => true,

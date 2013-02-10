@@ -102,3 +102,5 @@ Let us know which language you need. We will probably be able to translate this 
 = 0.1 =
 
 * Initial release.
+
+== Upgrade Notice ==
