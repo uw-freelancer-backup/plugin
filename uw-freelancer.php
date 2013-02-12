@@ -6,14 +6,16 @@ Description: Display freelancer.com user information, including feedback, using 
 Version: 0.1
 Author: Upeksha Wisidagama
 Author URI: http://bapml.com/wordpress-freelancer-plugin
-License: GPL2 or later.
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 */
 
 /*  Copyright 2013  Upeksha Wisidagama  (email : upekshawisidagama@gmail.com)
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as 
-    published by the Free Software Foundation.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -21,9 +23,7 @@ License: GPL2 or later.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-    MA  02110-1301  USA
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 if ( !defined('UWF_URL') )
@@ -38,6 +38,7 @@ class UW_Freelancer{
     private $api_url = 'http://api.freelancer.com';    
     private $settings;
     private $customizer;
+    private $tracker;
     private $prefix = 'uw_freelancer';
     
     function __construct() {
@@ -48,7 +49,10 @@ class UW_Freelancer{
         $this->settings = new UW_Freelancer_Setttings();    
         
         require 'inc/class-uwf-customizer.php';
-        $this->customizer = new UW_Freelancer_Customizer();          
+        $this->customizer = new UW_Freelancer_Customizer();     
+        
+        require 'inc/class-uwf-tracker.php';
+        $this->customizer = new UW_Freelancer_Tracker();        
         
         add_action( 'widgets_init', array($this, 'register_widgets') );       
         

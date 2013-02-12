@@ -1,9 +1,9 @@
 === UW Freelancer ===
 Contributors: upeksha-wisidagama
 Donate link: http://bapml.com/
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Tags: freelancer, freelancer.com, profile widget, affiliate widget
+License: GPLv3
+License URI: http://www.gnu.org/licenses/gpl-3.0.txt
+Tags: freelancer, freelancer.com, profile widget, feedback widget, affiliate widget
 Requires at least: 3.1
 Tested up to: 3.5
 Stable tag: 0.1
