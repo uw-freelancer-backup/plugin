@@ -45,7 +45,7 @@ function show_provider(){
     $uw_freelancer_options = get_option('uw_freelancer_options');
     $checked = $uw_freelancer_options['show_provider'];
     echo '<input type="checkbox" id="uw_freelancer_options[show_provider]" name="uw_freelancer_options[show_provider]" value="1"'; checked($checked); echo ' />';
-    echo __(' Display project poster/employer (feeback provider)', 'uwf');
+    echo __(' Display project poster/employer (feedback provider)', 'uwf');
 }
 
 add_settings_field('show_provider_link', __('Project Poster Link', 'uwf'), 'show_provider_link', 'uw-freelancer-settings', 'freelancer_feedback');
@@ -54,7 +54,7 @@ function show_provider_link(){
     $uw_freelancer_options = get_option('uw_freelancer_options');
     $checked = $uw_freelancer_options['show_provider_link'];
     echo '<input type="checkbox" id="uw_freelancer_options[show_provider_link]" name="uw_freelancer_options[show_provider_link]" value="1"'; checked($checked); echo ' />';
-    echo __(' Display a link to project poster/employer profile on freelancer.com (feeback provider)', 'uwf');
+    echo __(' Display a link to project poster/employer profile on freelancer.com (feedback provider)', 'uwf');
 }
 
 add_settings_field('show_project', __('Show Project', 'uwf'), 'show_project', 'uw-freelancer-settings', 'freelancer_feedback');
@@ -81,7 +81,7 @@ function show_rating(){
     $uw_freelancer_options = get_option('uw_freelancer_options');
     $checked = $uw_freelancer_options['show_rating'];
     echo '<input type="checkbox" id="uw_freelancer_options[show_rating]" name="uw_freelancer_options[show_rating]" value="1"'; checked($checked); echo ' />';
-    echo __(' Display project rating associate with the feedback', 'uwf');
+    echo __(' Display project rating associated with the feedback', 'uwf');
 }
 
 add_settings_field('show_value', __('Project Budget', 'uwf'), 'show_value', 'uw-freelancer-settings', 'freelancer_feedback');
